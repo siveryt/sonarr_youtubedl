@@ -4,6 +4,41 @@
 
 A qBittorrent-compatible API server that enables Sonarr to download YouTube content using yt-dlp.
 
+---
+
+## Quick Start
+
+**1. Install & Run**
+```bash
+# Install yt-dlp and the PO Token provider (required for YouTube)
+pip install yt-dlp bgutil-ytdlp-pot-provider
+
+# Node.js 18+ is required for token generation
+# macOS: brew install node
+# Ubuntu: sudo apt install nodejs
+
+# Run the server
+python ytdl_client.py
+```
+
+**2. Add to Sonarr** (Settings → Download Clients → + → qBittorrent)
+
+| Setting | Value |
+|---------|-------|
+| Host | `localhost` |
+| Port | `8181` |
+| Username | `admin` |
+| Password | `adminadmin` |
+| Category | `tv-sonarr` |
+
+![Sonarr Settings](instructions.png)
+
+**3. Test & Save** - Click Test, then Save. Done!
+
+**4. Add the Indexer** - You also need [sonarr-youtube-indexer](https://github.com/upggr/sonarr-youtube-indexer) for Sonarr to find YouTube videos.
+
+---
+
 ## The Problem
 
 Sonarr can track YouTube series (like Kurzgesagt, Veritasium, etc.) through TheTVDB metadata, but it has no way to actually download them - YouTube isn't a torrent tracker or Usenet provider.
@@ -30,7 +65,9 @@ This project creates a **fake qBittorrent server** that:
 ## Requirements
 
 - Python 3.8+
-- yt-dlp (`pip install yt-dlp` or `brew install yt-dlp`)
+- Node.js 18+ (for YouTube PO Token generation)
+- yt-dlp (`pip install yt-dlp`)
+- bgutil-ytdlp-pot-provider (`pip install bgutil-ytdlp-pot-provider`) - **Required for YouTube**
 - ffmpeg (for merging video/audio streams)
 
 ## Installation
