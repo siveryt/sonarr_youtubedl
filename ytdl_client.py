@@ -27,15 +27,25 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
 import logging
 
-# Configuration
+# Helper function to safely parse port number from environment variable
+def _get_port(env_var, default):
+    """Safely parse port number from environment variable."""
+    try:
+        return int(os.getenv(env_var, default))
+    except (ValueError, TypeError):
+        logger_temp = logging.getLogger(__name__)
+        logger_temp.warning(f"Invalid port value in {env_var}, using default: {default}")
+        return int(default)
+
+# Configuration - reads from environment variables with fallback to defaults
 CONFIG = {
-    "host": "0.0.0.0",
-    "port": 8181,
-    "username": "admin",
-    "password": "adminadmin",
-    "download_path": "/Volumes/MEDIA/TV",
-    "yt_dlp_path": "yt-dlp",
-    "log_level": "INFO",
+    "host": os.getenv("YTDL_HOST", "0.0.0.0"),
+    "port": _get_port("YTDL_PORT", "8181"),
+    "username": os.getenv("YTDL_USERNAME", "admin"),
+    "password": os.getenv("YTDL_PASSWORD", "adminadmin"),
+    "download_path": os.getenv("YTDL_DOWNLOAD_PATH", "/Volumes/MEDIA/TV"),
+    "yt_dlp_path": os.getenv("YTDL_BIN_PATH", "yt-dlp"),
+    "log_level": os.getenv("YTDL_LOG_LEVEL", "INFO"),
 }
 
 # In-memory storage for downloads

@@ -137,14 +137,45 @@ EXPOSE 8181
 CMD ["python", "ytdl_client.py"]
 ```
 
+Build and run with environment variables:
 ```bash
 docker build -t sonarr-youtube-dl .
-docker run -d -p 8181:8181 -v /path/to/media:/media sonarr-youtube-dl
+docker run -d -p 8181:8181 \
+  -e YTDL_USERNAME=myuser \
+  -e YTDL_PASSWORD=mypassword \
+  -e YTDL_DOWNLOAD_PATH=/media \
+  -v /path/to/media:/media \
+  sonarr-youtube-dl
 ```
 
 ## Configuration
 
-Edit the `CONFIG` dict at the top of `ytdl_client.py`:
+The application can be configured either by editing the `CONFIG` dict in `ytdl_client.py` or by setting environment variables (recommended for Docker/containerized deployments).
+
+### Environment Variables
+
+| Environment Variable | Default Value | Description |
+|---------------------|---------------|-------------|
+| `YTDL_HOST` | `0.0.0.0` | Listen address |
+| `YTDL_PORT` | `8181` | Port number |
+| `YTDL_USERNAME` | `admin` | Auth username |
+| `YTDL_PASSWORD` | `adminadmin` | Auth password |
+| `YTDL_DOWNLOAD_PATH` | `/Volumes/MEDIA/TV` | Default download location |
+| `YTDL_BIN_PATH` | `yt-dlp` | Path to yt-dlp binary |
+| `YTDL_LOG_LEVEL` | `INFO` | Logging level (DEBUG, INFO, WARNING, ERROR) |
+
+Example:
+```bash
+export YTDL_PORT=9090
+export YTDL_USERNAME=myuser
+export YTDL_PASSWORD=mypassword
+export YTDL_DOWNLOAD_PATH=/path/to/media/TV
+python ytdl_client.py
+```
+
+### Direct Configuration
+
+Alternatively, edit the `CONFIG` dict at the top of `ytdl_client.py`:
 
 ```python
 CONFIG = {
